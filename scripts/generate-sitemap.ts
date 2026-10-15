@@ -62,10 +62,24 @@ if (!fs.existsSync(publicDir)) {
 }
 
 fs.writeFileSync(path.join(publicDir, 'sitemap.xml'), xml, 'utf-8');
-console.log(`Generated sitemap.xml with ${allUrls.length} URLs in ${publicDir}`);
+console.log(`[sitemap] Generated public/sitemap.xml with ${allUrls.length} URLs`);
+
+// Verify robots.txt in public
+const robotsContent = `# Trendora Daily - Robots Configuration
+# Allow all search engine crawlers to discover and index articles and public pages
+User-agent: *
+Allow: /
+
+# Directives
+Sitemap: ${baseUrl}/sitemap.xml
+`;
+fs.writeFileSync(path.join(publicDir, 'robots.txt'), robotsContent, 'utf-8');
+console.log(`[robots] Verified public/robots.txt with Sitemap: ${baseUrl}/sitemap.xml`);
 
 const distDir = path.resolve(__dirname, '../dist');
 if (fs.existsSync(distDir)) {
   fs.writeFileSync(path.join(distDir, 'sitemap.xml'), xml, 'utf-8');
-  console.log(`Updated sitemap.xml in ${distDir}`);
+  fs.writeFileSync(path.join(distDir, 'robots.txt'), robotsContent, 'utf-8');
+  console.log(`[sync] Copied sitemap.xml and robots.txt to ${distDir}`);
 }
+
