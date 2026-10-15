@@ -4,4 +4,4 @@ User-agent: *
 Allow: /
 
 # Directives
-Sitemap: https://trendoradaily.com/sitemap.xml
+Sitemap: https://trendora-daily.vercel.app/sitemap.xml

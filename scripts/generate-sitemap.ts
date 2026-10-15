@@ -7,7 +7,7 @@ import { CATEGORIES } from '../src/content/categories';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const baseUrl = 'https://trendoradaily.com';
+const baseUrl = 'https://trendora-daily.vercel.app';
 
 interface SitemapEntry {
   url: string;
@@ -63,3 +63,9 @@ if (!fs.existsSync(publicDir)) {
 
 fs.writeFileSync(path.join(publicDir, 'sitemap.xml'), xml, 'utf-8');
 console.log(`Generated sitemap.xml with ${allUrls.length} URLs in ${publicDir}`);
+
+const distDir = path.resolve(__dirname, '../dist');
+if (fs.existsSync(distDir)) {
+  fs.writeFileSync(path.join(distDir, 'sitemap.xml'), xml, 'utf-8');
+  console.log(`Updated sitemap.xml in ${distDir}`);
+}

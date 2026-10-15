@@ -17,6 +17,8 @@ export interface SeoMetadata {
   breadcrumbs?: BreadcrumbItem[];
 }
 
+export const CANONICAL_BASE_URL = siteConfig.canonicalBaseUrl || 'https://trendora-daily.vercel.app';
+
 /**
  * Updates document head metadata dynamically in a React SPA
  */
@@ -38,14 +40,16 @@ export function updateSeoMetadata(meta: SeoMetadata): void {
   updateMetaTag('property', 'og:type', meta.ogType || 'website');
   updateMetaTag('property', 'og:site_name', siteConfig.name);
 
-  const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : siteConfig.url;
-  const currentUrl = meta.canonicalUrl || `${origin}${typeof window !== 'undefined' ? window.location.pathname : ''}`;
-  updateMetaTag('property', 'og:url', currentUrl);
+  const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
+  const normalizedPath = pathname === '' || pathname === '/' ? '/' : pathname;
+  const canonicalUrl = meta.canonicalUrl || (normalizedPath === '/' ? `${CANONICAL_BASE_URL}/` : `${CANONICAL_BASE_URL}${normalizedPath}`);
+
+  updateMetaTag('property', 'og:url', canonicalUrl);
 
   if (meta.ogImage) {
     const fullImgUrl = meta.ogImage.startsWith('http')
       ? meta.ogImage
-      : `${origin}${meta.ogImage}`;
+      : `${CANONICAL_BASE_URL}${meta.ogImage.startsWith('/') ? '' : '/'}${meta.ogImage}`;
     updateMetaTag('property', 'og:image', fullImgUrl);
     updateMetaTag('name', 'twitter:image', fullImgUrl);
   }
@@ -62,10 +66,10 @@ export function updateSeoMetadata(meta: SeoMetadata): void {
     canonicalLink.setAttribute('rel', 'canonical');
     document.head.appendChild(canonicalLink);
   }
-  canonicalLink.setAttribute('href', currentUrl);
+  canonicalLink.setAttribute('href', canonicalUrl);
 
   // Structured Data (JSON-LD)
-  updateStructuredData(meta, currentUrl, origin);
+  updateStructuredData(meta, canonicalUrl, CANONICAL_BASE_URL);
 }
 
 function updateMetaTag(attr: 'name' | 'property', key: string, content: string) {
@@ -78,7 +82,7 @@ function updateMetaTag(attr: 'name' | 'property', key: string, content: string) 
   tag.setAttribute('content', content);
 }
 
-function updateStructuredData(meta: SeoMetadata, url: string, origin: string) {
+function updateStructuredData(meta: SeoMetadata, url: string, baseUrl: string) {
   const SCRIPT_ID = 'trendora-jsonld-schema';
   let scriptTag = document.getElementById(SCRIPT_ID) as HTMLScriptElement | null;
   if (!scriptTag) {
@@ -93,7 +97,7 @@ function updateStructuredData(meta: SeoMetadata, url: string, origin: string) {
       '@context': 'https://schema.org',
       '@type': 'Organization',
       name: siteConfig.name,
-      url: origin,
+      url: `${baseUrl}/`,
       description: siteConfig.description,
       email: siteConfig.editorialContact,
       sameAs: [siteConfig.officialFacebook],
@@ -102,10 +106,10 @@ function updateStructuredData(meta: SeoMetadata, url: string, origin: string) {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
       name: siteConfig.name,
-      url: origin,
+      url: `${baseUrl}/`,
       potentialAction: {
         '@type': 'SearchAction',
-        target: `${origin}/search?q={search_term_string}`,
+        target: `${baseUrl}/search?q={search_term_string}`,
         'query-input': 'required name=search_term_string',
       },
     },
@@ -115,7 +119,7 @@ function updateStructuredData(meta: SeoMetadata, url: string, origin: string) {
     const categoryName = CATEGORIES.find((c) => c.slug === meta.article!.category)?.name || meta.article.category.replace(/-/g, ' ');
     const articleImg = meta.article.featuredImage.startsWith('http') 
       ? meta.article.featuredImage 
-      : `${origin}${meta.article.featuredImage}`;
+      : `${baseUrl}${meta.article.featuredImage.startsWith('/') ? '' : '/'}${meta.article.featuredImage}`;
 
     schemas.push({
       '@context': 'https://schema.org',
@@ -136,7 +140,7 @@ function updateStructuredData(meta: SeoMetadata, url: string, origin: string) {
       publisher: {
         '@type': 'Organization',
         name: siteConfig.name,
-        url: origin,
+        url: `${baseUrl}/`,
       },
       mainEntityOfPage: {
         '@type': 'WebPage',
@@ -152,13 +156,13 @@ function updateStructuredData(meta: SeoMetadata, url: string, origin: string) {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: origin,
+          item: `${baseUrl}/`,
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: categoryName,
-          item: `${origin}/category/${meta.article.category}`,
+          item: `${baseUrl}/category/${meta.article.category}`,
         },
         {
           '@type': 'ListItem',
@@ -176,7 +180,9 @@ function updateStructuredData(meta: SeoMetadata, url: string, origin: string) {
         '@type': 'ListItem',
         position: idx + 1,
         name: b.name,
-        item: b.url.startsWith('http') ? b.url : `${origin}${b.url}`,
+        item: b.url.startsWith('http')
+          ? b.url
+          : (b.url === '/' ? `${baseUrl}/` : `${baseUrl}${b.url.startsWith('/') ? '' : '/'}${b.url}`),
       })),
     });
   }

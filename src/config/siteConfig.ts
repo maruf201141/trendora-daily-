@@ -1,10 +1,13 @@
+export const CANONICAL_PRODUCTION_URL = 'https://trendora-daily.vercel.app';
+
 export const siteConfig = {
   name: 'Trendora Daily',
   shortName: 'Trendora',
   tagline: 'Stories that stay with you. Ideas that move you forward.',
   description:
     'Thoughtful stories, useful life lessons, and simple technology guides to help you live, learn, and navigate your digital world with confidence.',
-  url: typeof window !== 'undefined' ? window.location.origin : 'https://trendoradaily.com',
+  url: 'https://trendora-daily.vercel.app',
+  canonicalBaseUrl: 'https://trendora-daily.vercel.app',
   editorialContact: 'mtxmaruf201@gmail.com',
   privacyContact: 'mtxmaruf201@gmail.com',
   officialFacebook: 'https://www.facebook.com/share/1C88DeX5oV/',
