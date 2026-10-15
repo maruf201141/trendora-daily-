@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-prose: "Lora", Georgia, serif;
+
+  --color-brand-bg: #0B1220;
+  --color-brand-nav: #080E19;
+  --color-brand-surface: #111C2F;
+  --color-brand-card: #142138;
+  --color-brand-accent: #8CF0C4;
+  --color-brand-accent-blue: #9BC7FF;
+  --color-brand-text: #EDF4FF;
+  --color-brand-muted: #AAB9CE;
+  --color-brand-border: rgba(155, 199, 255, 0.12);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-sans);
+    background-color: #0B1220;
+    color: #EDF4FF;
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  /* Accessible focus indicators */
+  :focus-visible {
+    outline: 2px solid #8CF0C4;
+    outline-offset: 2px;
+  }
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #080E19;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e2c47;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2a3c5e;
+}

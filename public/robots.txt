@@ -1,0 +1,7 @@
+# Trendora Daily - Robots Configuration
+# Allow all search engine crawlers to discover and index articles and public pages
+User-agent: *
+Allow: /
+
+# Directives
+Sitemap: https://trendoradaily.com/sitemap.xml

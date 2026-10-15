@@ -1,0 +1,6 @@
+{
+  "name": "Trendora Daily",
+  "description": "Stories that stay with you. Ideas that move you forward. Premium editorial magazine covering life, wellbeing, technology, digital skills, and online safety.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
