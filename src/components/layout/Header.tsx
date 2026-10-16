@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, Menu, X, SlidersHorizontal, Mail } from 'lucide-react';
+import { Search, Menu, X, Mail } from 'lucide-react';
 import { siteConfig } from '../../config/siteConfig';
 
 interface HeaderProps {
-  onOpenAdConsole: () => void;
+  onOpenAdConsole?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onOpenAdConsole }) => {
+export const Header: React.FC<HeaderProps> = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -70,18 +70,6 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdConsole }) => {
               className="p-2 rounded-lg text-[#AAB9CE] hover:text-[#EDF4FF] hover:bg-[#111C2F] transition-colors"
             >
               <Search className="w-4 h-4" />
-            </button>
-
-            {/* Ad Diagnostics & Verification Trigger */}
-            <button
-              type="button"
-              onClick={onOpenAdConsole}
-              title="Open Ad Integration & Verification Console"
-              aria-label="Ad Integration & Verification Console"
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#111C2F] border border-[#AAB9CE]/20 text-[11px] font-medium text-[#AAB9CE] hover:text-[#EDF4FF] hover:border-[#8CF0C4]/40 transition-colors whitespace-nowrap shrink-0"
-            >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-[#8CF0C4]" />
-              <span className="hidden sm:inline">Ad Console</span>
             </button>
 
             {/* Mobile Menu Hamburger */}
@@ -148,17 +136,6 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdConsole }) => {
               <Search className="w-4 h-4 text-[#8CF0C4]" />
               <span>Search Publication</span>
             </Link>
-            <button
-              type="button"
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenAdConsole();
-              }}
-              className="flex items-center gap-2 text-sm text-[#AAB9CE] hover:text-[#EDF4FF]"
-            >
-              <SlidersHorizontal className="w-4 h-4 text-[#8CF0C4]" />
-              <span>Advertising Settings & Verification</span>
-            </button>
           </div>
 
           <div className="mt-auto pt-8 text-xs text-[#AAB9CE]/70">

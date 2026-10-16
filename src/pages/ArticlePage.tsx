@@ -26,16 +26,38 @@ export const ArticlePage: React.FC<ArticlePageProps> = ({ onOpenAdConsole }) => 
   const article = slug ? getArticleBySlug(slug) : undefined;
 
   useEffect(() => {
-    if (!article) return;
+    if (!article) {
+      document.title = 'Article Not Found | Trendora Daily';
+      let robotsTag = document.querySelector('meta[name="robots"]');
+      if (!robotsTag) {
+        robotsTag = document.createElement('meta');
+        robotsTag.setAttribute('name', 'robots');
+        document.head.appendChild(robotsTag);
+      }
+      robotsTag.setAttribute('content', 'noindex, follow');
+      return;
+    }
+
+    // Clean up any stale noindex tag
+    const robotsTag = document.querySelector('meta[name="robots"]');
+    if (robotsTag && robotsTag.getAttribute('content')?.includes('noindex')) {
+      robotsTag.remove();
+    }
 
     window.scrollTo(0, 0);
 
+    const categoryObj = CATEGORIES.find((c) => c.slug === article.category);
     updateSeoMetadata({
       title: article.title,
       description: article.excerpt,
       ogType: 'article',
       ogImage: article.featuredImage,
       article,
+      breadcrumbs: [
+        { name: 'Home', url: '/' },
+        { name: categoryObj?.name || article.category, url: `/category/${article.category}` },
+        { name: article.title, url: `/articles/${article.slug}` },
+      ],
     });
   }, [article]);
 

@@ -15,7 +15,7 @@ export const AdFallback: React.FC<AdFallbackProps> = ({
   provider,
   reason = 'Placement disabled or unverified',
   onOpenInspector,
-  showInspectorButton = true,
+  showInspectorButton = false,
 }) => {
   // If placement is completely disabled, collapse naturally without reserving empty void
   if (!placement.isEnabled) {
